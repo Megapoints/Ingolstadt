@@ -10,7 +10,7 @@
             font-family: Arial, sans-serif;
             background-color: #ffebcd;
             color: black;
-            background-image: url('flowers-bg.jpg');
+            background-image: url('background.png');
             background-size: cover;
         }
         .password-screen {
@@ -56,6 +56,16 @@
                 black 340deg 360deg
             );
             transition: transform 3s ease-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .wheel span {
+            position: absolute;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
         }
         .pointer {
             position: absolute;
@@ -93,7 +103,9 @@
         <p>Spin the wheel and uncover the phrase!</p>
         <div class="wheel-container">
             <div class="pointer"></div>
-            <div class="wheel" id="wheel"></div>
+            <div class="wheel" id="wheel">
+                <span>A</span><span>B</span><span>C</span><span>Pirate</span> 
+            </div>
         </div>
         <button onclick="spinWheel()">Spin</button>
         <p id="result"></p>
@@ -120,7 +132,7 @@
         function spinWheel() {
             if (turns <= 0) {
                 alert("Game over! Restarting...");
-                location.reload();
+                restartGame();
             }
             const wheel = document.getElementById('wheel');
             const result = document.getElementById('result');
@@ -135,7 +147,7 @@
                 const selectedSector = sectors[Math.floor(Math.random() * sectors.length)];
                 if (selectedSector === "Pirate") {
                     alert("Oh no! Pirate! Restarting...");
-                    location.reload();
+                    restartGame();
                 }
                 if (correctWord.includes(selectedSector)) {
                     correctWord.split('').forEach((char, index) => {
@@ -146,6 +158,13 @@
                 turns--;
                 document.getElementById("turns").innerText = "Turns left: " + turns;
             }, 3000);
+        }
+
+        function restartGame() {
+            turns = 5;
+            displayedWord = "_ _ _ _ _   _ _ _ _ _ _   _ _ _ _ _ _ _   _ _".split(' ');
+            document.getElementById("wordDisplay").innerText = displayedWord.join(' ');
+            document.getElementById("turns").innerText = "Turns left: 5";
         }
     </script>
 </body>
