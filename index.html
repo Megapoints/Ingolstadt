@@ -26,23 +26,26 @@
         }
         .wheel-container {
             position: relative;
-            width: 400px;
-            height: 400px;
+            width: 300px;
+            height: 300px;
             margin: 50px auto;
         }
         .wheel {
-            width: 100%;
-            height: 100%;
+            width: 90%;
+            height: 90%;
             border-radius: 50%;
             border: 10px solid white;
-            background: url('image.png') no-repeat center;
-            background-size: cover;
-            transition: transform 3s ease-out;
+            background: url('wheel-design.png') no-repeat center;
+            background-size: contain;
+            transition: transform 2s ease-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: relative;
         }
         .pointer {
             position: absolute;
-            top: -10px;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
@@ -51,18 +54,17 @@
             border-right: 15px solid transparent;
             border-bottom: 30px solid white;
         }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: white;
+            border: none;
+            cursor: pointer;
+        }
         .word-display {
-            width: 80%;
-            height: 100px;
-            margin: 20px auto;
-            background: url('image.png') no-repeat center;
-            background-size: cover;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             font-size: 24px;
-            font-weight: bold;
-            color: white;
+            margin-top: 20px;
+            visibility: hidden;
         }
         .pirate-alert {
             display: none;
@@ -72,7 +74,6 @@
             transform: translate(-50%, -50%);
             width: 300px;
             height: 300px;
-            background: url('pirate.png') no-repeat center;
             background-size: cover;
             z-index: 100;
         }
@@ -105,6 +106,7 @@
     
     <script>
         let turns = 5;
+        let spinSpeed = 2;
         const correctWord = "COBEN HARLAN MISSING YOU";
         const password = "1";
         const wheelSectors = ["A", "B", "C", "D", "E", "F", "G", "Pirate", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Pirate", "Pirate"];
@@ -127,6 +129,8 @@
             }
             const wheel = document.getElementById('wheel');
             const degrees = Math.floor(3600 + Math.random() * 360);
+            spinSpeed *= 0.9;
+            wheel.style.transition = `transform ${spinSpeed}s ease-out`;
             wheel.style.transform = `rotate(${degrees}deg)`;
             
             setTimeout(() => {
@@ -141,16 +145,18 @@
                 updateWordDisplay();
                 turns--;
                 document.getElementById("turns").innerText = "Turns left: " + turns;
-            }, 3000);
+            }, spinSpeed * 1000);
         }
 
         function updateWordDisplay() {
             let displayWord = correctWord.split('').map(letter => discoveredLetters.has(letter) || letter === ' ' ? letter : '_').join(' ');
             document.getElementById("wordDisplay").innerText = displayWord;
+            document.getElementById("wordDisplay").style.visibility = discoveredLetters.size === new Set(correctWord.replace(/ /g, '')).size ? "visible" : "hidden";
         }
 
         function restartGame() {
             turns = 5;
+            spinSpeed = 2;
             discoveredLetters.clear();
             updateWordDisplay();
             document.getElementById("turns").innerText = "Turns left: 5";
@@ -158,7 +164,11 @@
         }
 
         function showPirateAlert() {
-            document.getElementById("pirateAlert").style.display = "block";
+            const pirateImages = ["pirate.png", "pirate2.png"];
+            const selectedImage = pirateImages[Math.floor(Math.random() * pirateImages.length)];
+            const pirateAlert = document.getElementById("pirateAlert");
+            pirateAlert.style.backgroundImage = `url(${selectedImage})`;
+            pirateAlert.style.display = "block";
         }
     </script>
 </body>
