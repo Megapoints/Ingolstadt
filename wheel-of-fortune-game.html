@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wheel of Fortune</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #ffebcd;
+            color: black;
+            background-image: url('flowers-bg.jpg');
+            background-size: cover;
+        }
+        .password-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .game-container {
+            display: none;
+            text-align: center;
+        }
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+        }
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 10px solid white;
+            background: conic-gradient(
+                red 0deg 20deg,
+                yellow 20deg 40deg,
+                green 40deg 60deg,
+                blue 60deg 80deg,
+                orange 80deg 100deg,
+                pink 100deg 120deg,
+                purple 120deg 140deg,
+                cyan 140deg 160deg,
+                black 160deg 180deg,
+                red 180deg 200deg,
+                yellow 200deg 220deg,
+                green 220deg 240deg,
+                blue 240deg 260deg,
+                orange 260deg 280deg,
+                pink 280deg 300deg,
+                purple 300deg 320deg,
+                cyan 320deg 340deg,
+                black 340deg 360deg
+            );
+            transition: transform 3s ease-out;
+        }
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 30px solid white;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: white;
+            border: none;
+            cursor: pointer;
+        }
+        .word-display {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="password-screen" id="passwordScreen">
+        <h2>Enter Password to Start</h2>
+        <input type="password" id="passwordInput">
+        <button onclick="checkPassword()">Submit</button>
+    </div>
+    
+    <div class="game-container" id="gameContainer">
+        <h1>Wheel of Fortune</h1>
+        <p>Spin the wheel and uncover the phrase!</p>
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <div class="wheel" id="wheel"></div>
+        </div>
+        <button onclick="spinWheel()">Spin</button>
+        <p id="result"></p>
+        <div class="word-display" id="wordDisplay">_ _ _ _ _   _ _ _ _ _ _   _ _ _ _ _ _ _   _ _</div>
+        <p id="turns">Turns left: 5</p>
+    </div>
+    
+    <script>
+        let turns = 5;
+        const correctWord = "Coben Harlan Missing You".toUpperCase();
+        let displayedWord = "_ _ _ _ _   _ _ _ _ _ _   _ _ _ _ _ _ _   _ _".split(' ');
+        const password = "pirate";
+
+        function checkPassword() {
+            const input = document.getElementById("passwordInput").value;
+            if (input === password) {
+                document.getElementById("passwordScreen").style.display = "none";
+                document.getElementById("gameContainer").style.display = "block";
+            } else {
+                alert("Wrong password! Try again.");
+            }
+        }
+
+        function spinWheel() {
+            if (turns <= 0) {
+                alert("Game over! Restarting...");
+                location.reload();
+            }
+            const wheel = document.getElementById('wheel');
+            const result = document.getElementById('result');
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+            const pirateSectors = ["Pirate", "Pirate", "Pirate"];
+            const sectors = [...letters, ...pirateSectors];
+            
+            const degrees = Math.floor(3600 + Math.random() * 360);
+            wheel.style.transform = `rotate(${degrees}deg)`;
+            
+            setTimeout(() => {
+                const selectedSector = sectors[Math.floor(Math.random() * sectors.length)];
+                if (selectedSector === "Pirate") {
+                    alert("Oh no! Pirate! Restarting...");
+                    location.reload();
+                }
+                if (correctWord.includes(selectedSector)) {
+                    correctWord.split('').forEach((char, index) => {
+                        if (char === selectedSector) displayedWord[index] = char;
+                    });
+                }
+                document.getElementById("wordDisplay").innerText = displayedWord.join(' ');
+                turns--;
+                document.getElementById("turns").innerText = "Turns left: " + turns;
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
