@@ -32,14 +32,28 @@
             margin: 50px auto;
         }
         .wheel {
+            position: relative;
             width: 100%;
             height: 100%;
             border-radius: 50%;
             border: 10px solid white;
-            background: url('wheel-design.png') no-repeat center;
-            background-size: cover;
-            transition: transform 2s ease-out;
-            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-origin: center;
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+        .wheel div {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            background-color: white;
+            clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+            text-align: center;
+            line-height: 80px;
+            font-size: 24px;
+            font-weight: bold;
+            transform-origin: 100% 100%;
         }
         .pointer {
             position: absolute;
@@ -62,7 +76,6 @@
         .word-display {
             font-size: 36px;
             margin-top: 20px;
-            visibility: visible;
             letter-spacing: 5px;
         }
         .pirate-alert {
@@ -105,19 +118,31 @@
     
     <script>
         let turns = 5;
-        let spinSpeed = 2;
+        let spinSpeed = 50;
         const correctWord = "COBEN HARLAN MISSING YOU";
         const password = "1";
         const wheelSectors = ["A", "B", "C", "D", "E", "F", "G", "Pirate", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "Pirate", "Pirate"];
         let discoveredLetters = new Set();
+        const wheel = document.getElementById("wheel");
 
         function checkPassword() {
             const input = document.getElementById("passwordInput").value;
             if (input === password) {
                 document.getElementById("passwordScreen").style.display = "none";
                 document.getElementById("gameContainer").style.display = "block";
+                createWheel();
             } else {
                 alert("Wrong password! Try again.");
+            }
+        }
+        
+        function createWheel() {
+            wheel.innerHTML = "";
+            for (let i = 0; i < wheelSectors.length; i++) {
+                let sector = document.createElement("div");
+                sector.innerText = wheelSectors[i];
+                sector.style.transform = `rotate(${(360 / wheelSectors.length) * i}deg)`;
+                wheel.appendChild(sector);
             }
         }
 
@@ -126,10 +151,8 @@
                 alert("Game over! Restarting...");
                 restartGame();
             }
-            const wheel = document.getElementById('wheel');
-            const degrees = Math.floor(3600 + Math.random() * 360);
-            spinSpeed *= 0.9;
-            wheel.style.transition = `transform ${spinSpeed}s ease-out`;
+            let degrees = 50 * 360 + Math.floor(Math.random() * 360);
+            wheel.style.transition = `transform ${spinSpeed / 10}s ease-out`;
             wheel.style.transform = `rotate(${degrees}deg)`;
             
             setTimeout(() => {
@@ -145,34 +168,12 @@
                 updateWordDisplay();
                 turns--;
                 document.getElementById("turns").innerText = "Turns left: " + turns;
-            }, spinSpeed * 1000);
+            }, spinSpeed * 10);
         }
 
         function updateWordDisplay() {
             let displayWord = correctWord.split('').map(letter => discoveredLetters.has(letter) || letter === ' ' ? letter : '_').join(' ');
             document.getElementById("wordDisplay").innerText = displayWord;
-        }
-
-        function restartGame() {
-            turns = 5;
-            spinSpeed = 2;
-            discoveredLetters.clear();
-            updateWordDisplay();
-            document.getElementById("turns").innerText = "Turns left: 5";
-            document.getElementById("pirateAlert").style.display = "none";
-        }
-
-        function showPirateAlert() {
-            const pirateImages = ["pirate.png", "pirate2.png"];
-            const selectedImage = pirateImages[Math.floor(Math.random() * pirateImages.length)];
-            const pirateAlert = document.getElementById("pirateAlert");
-            pirateAlert.style.backgroundImage = `url(${selectedImage})`;
-            pirateAlert.style.display = "block";
-        }
-        
-        function playPirateSound() {
-            let audio = new Audio('pirate-sound.mp4');
-            audio.play();
         }
     </script>
 </body>
