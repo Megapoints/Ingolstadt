@@ -37,7 +37,7 @@
             border-radius: 50%;
             border: 10px solid white;
             background: url('wheel-design.png') no-repeat center;
-            background-size: contain;
+            background-size: cover;
             transition: transform 2s ease-out;
             position: relative;
         }
@@ -62,7 +62,8 @@
         .word-display {
             font-size: 36px;
             margin-top: 20px;
-            visibility: hidden;
+            visibility: visible;
+            letter-spacing: 5px;
         }
         .pirate-alert {
             display: none;
@@ -97,7 +98,7 @@
         </div>
         <button onclick="spinWheel()">Spin</button>
         <p id="result"></p>
-        <div class="word-display" id="wordDisplay"></div>
+        <div class="word-display" id="wordDisplay">_ _ _ _ _   _ _ _ _ _ _   _ _ _ _ _ _ _   _ _</div>
         <p id="turns">Turns left: 5</p>
     </div>
     <div class="pirate-alert" id="pirateAlert"></div>
@@ -150,7 +151,6 @@
         function updateWordDisplay() {
             let displayWord = correctWord.split('').map(letter => discoveredLetters.has(letter) || letter === ' ' ? letter : '_').join(' ');
             document.getElementById("wordDisplay").innerText = displayWord;
-            document.getElementById("wordDisplay").style.visibility = discoveredLetters.size === new Set(correctWord.replace(/ /g, '')).size ? "visible" : "hidden";
         }
 
         function restartGame() {
