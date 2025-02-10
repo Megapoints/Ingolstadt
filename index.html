@@ -7,9 +7,9 @@
     <style>
         body {
             text-align: center;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial Black', sans-serif;
             background-color: #ffebcd;
-            color: black;
+            color: #b30000;
             background-image: url('background.png');
             background-size: cover;
         }
@@ -19,6 +19,7 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
+            font-size: 24px;
         }
         .game-container {
             display: none;
@@ -26,43 +27,40 @@
         }
         .wheel-container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 400px;
             margin: 50px auto;
         }
         .wheel {
-            width: 90%;
-            height: 90%;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             border: 10px solid white;
             background: url('wheel-design.png') no-repeat center;
             background-size: contain;
             transition: transform 2s ease-out;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             position: relative;
         }
         .pointer {
             position: absolute;
-            top: -20px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-bottom: 30px solid white;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid red;
         }
         button {
-            padding: 10px 20px;
-            font-size: 18px;
+            padding: 15px 30px;
+            font-size: 22px;
             background: white;
-            border: none;
+            border: 2px solid #b30000;
             cursor: pointer;
         }
         .word-display {
-            font-size: 24px;
+            font-size: 36px;
             margin-top: 20px;
             visibility: hidden;
         }
@@ -72,8 +70,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 400px;
             background-size: cover;
             z-index: 100;
         }
@@ -137,6 +135,7 @@
                 const selectedSector = wheelSectors[Math.floor(Math.random() * wheelSectors.length)];
                 if (selectedSector === "Pirate") {
                     showPirateAlert();
+                    playPirateSound();
                     setTimeout(restartGame, 2000);
                 }
                 if (correctWord.includes(selectedSector)) {
@@ -169,6 +168,11 @@
             const pirateAlert = document.getElementById("pirateAlert");
             pirateAlert.style.backgroundImage = `url(${selectedImage})`;
             pirateAlert.style.display = "block";
+        }
+        
+        function playPirateSound() {
+            let audio = new Audio('pirate-sound.mp4');
+            audio.play();
         }
     </script>
 </body>
